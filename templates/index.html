@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ form_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>{{ form_title }}</h1>
+            <p class="subtitle">{{ form_description }}</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('submit') }}" method="POST">
+                <div class="form-group">
+                    <label for="first_name">نام</label>
+                    <input type="text" id="first_name" name="first_name" required placeholder="مثال: علی">
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">نام خانوادگی</label>
+                    <input type="text" id="last_name" name="last_name" required placeholder="مثال: محمدی">
+                </div>
+
+                <div class="form-group">
+                    <label for="national_id">کد ملی</label>
+                    <input type="text" id="national_id" name="national_id" required
+                           pattern="[0-9]{10}" maxlength="10" placeholder="10 رقم">
+                </div>
+
+                <div class="form-group">
+                    <label for="eitaa_number">شماره ایتا</label>
+                    <input type="text" id="eitaa_number" name="eitaa_number" required
+                           placeholder="مثال: 09123456789">
+                </div>
+
+                <div class="form-group">
+                    <label for="school">مدرسه</label>
+                    <select id="school" name="school" required onchange="updateClasses()">
+                        <option value="">-- انتخاب کنید --</option>
+                        {% for school_name in schools.keys() %}
+                            <option value="{{ school_name }}">{{ school_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="class_name">کلاس</label>
+                    <select id="class_name" name="class_name" required>
+                        <option value="">-- ابتدا مدرسه را انتخاب کنید --</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit">ثبت نام</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const schoolsData = {{ schools | tojson }};
+
+        function updateClasses() {
+            const schoolSelect = document.getElementById("school");
+            const classSelect = document.getElementById("class_name");
+            const selectedSchool = schoolSelect.value;
+
+            classSelect.innerHTML = "";
+
+            if (!selectedSchool) {
+                classSelect.innerHTML = '<option value="">-- ابتدا مدرسه را انتخاب کنید --</option>';
+                return;
+            }
+
+            const classes = Object.keys(schoolsData[selectedSchool]);
+            classSelect.innerHTML = '<option value="">-- انتخاب کنید --</option>';
+
+            classes.forEach(function(className) {
+                const option = document.createElement("option");
+                option.value = className;
+                option.textContent = className;
+                classSelect.appendChild(option);
+            });
+        }
+    </script>
+</body>
+</html>
