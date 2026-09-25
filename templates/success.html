@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت نام موفق</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card success-card">
+            <div class="success-icon">✓</div>
+            <h1>ثبت نام با موفقیت انجام شد!</h1>
+
+            <div class="info-box">
+                <p><strong>مدرسه:</strong> {{ school }}</p>
+                <p><strong>کلاس:</strong> {{ class_name }}</p>
+            </div>
+
+            {% if channel_link %}
+                <p class="instruction">برای ورود به کانال کلاس خود، روی دکمه زیر کلیک کنید:</p>
+                <a href="{{ channel_link }}" class="btn-channel" target="_blank">
+                    ورود به کانال {{ class_name }} - {{ school }}
+                </a>
+            {% else %}
+                <div class="alert alert-error">لینک کانال یافت نشد. لطفا با معلم تماس بگیرید.</div>
+            {% endif %}
+
+            <p class="footer-text">اگر به مشکل خوردید، لطفا با معلم خود تماس بگیرید.</p>
+        </div>
+    </div>
+</body>
+</html>
