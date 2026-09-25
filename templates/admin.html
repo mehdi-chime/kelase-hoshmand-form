@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد ادمین</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container-wide">
+        <div class="card">
+            <div class="admin-header">
+                <h1>داشبورد ادمین</h1>
+                <div class="admin-actions">
+                    <a href="{{ url_for('admin_export') }}" class="btn-export">دانلود CSV</a>
+                    <a href="{{ url_for('admin_logout') }}" class="btn-logout">خروج</a>
+                </div>
+            </div>
+
+            <div class="stats-box">
+                <p><strong>تعداد کل دانش آموزان:</strong> {{ students | length }}</p>
+            </div>
+
+            {% if students %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>نام</th>
+                                <th>فامیل</th>
+                                <th>کد ملی</th>
+                                <th>شماره ایتا</th>
+                                <th>مدرسه</th>
+                                <th>کلاس</th>
+                                <th>زمان ثبت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in students %}
+                                <tr>
+                                    <td>{{ s.id }}</td>
+                                    <td>{{ s.first_name }}</td>
+                                    <td>{{ s.last_name }}</td>
+                                    <td>{{ s.national_id }}</td>
+                                    <td>{{ s.eitaa_number }}</td>
+                                    <td>{{ s.school }}</td>
+                                    <td>{{ s.class_name }}</td>
+                                    <td class="date-cell">{{ s.created_at[:19] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-message">هنوز هیچ دانش آموزی ثبت نام نکرده است.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
